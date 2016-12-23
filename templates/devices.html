@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>BLEXT editor</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+	<script src="js/jquery.min.js"></script>
+	<div id = "myDiv">
+	here
+	</div>
+	<div>
+	<button onclick="sendDevInfo()">send</button>
+	<script>
+	function sendDevInfo(){
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		{// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		}
+		else
+		{// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}	
+		var time = new Date();
+			xmlhttp.onreadystatechange=function()
+			{
+				if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+					time = new Date();
+					document.getElementById("myDiv").innerHTML = time.getSeconds() + xmlhttp.responseText);
+					console.log(time.getSeconds());
+					
+				}
+			}
+			setInterval(function(){	
+				xmlhttp.open("GET","Save_Local_test.txt",true);
+				xmlhttp.send();			
+			},3000);	
+		
+	};
+	</script>
+    </div>
+    <!-- Scripts -->
+    
+	
+</body>
+
+</html>
