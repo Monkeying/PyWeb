@@ -2,19 +2,25 @@
 <html>
 
 <head>
-    <title>BLEXT editor</title>
+    <title>PyWeb</title>
     <meta charset="utf-8" />
 </head>
 
 <body>
-	<script src="js/jquery.min.js"></script>
+    <script src="/static/js/jquery.min.js"></script>
 	<div id = "myDiv">
 	here
 	</div>
 	<div>
-	<button onclick="sendDevInfo()">send</button>
+	<button onclick="sendDevInfo()">send
+    </button>
+    <form action="/search-post/" method="get">
+		<input type="text" name="SN">
+		<!--<input type="submit" value="Submit">-->
+	</form>
 	<script>
-	function sendDevInfo(){
+	function sendDevInfo()
+    {
 		var xmlhttp;
 		if (window.XMLHttpRequest)
 		{// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -30,21 +36,21 @@
 				if (xmlhttp.readyState==4 && xmlhttp.status==200)
 				{
 					time = new Date();
-					document.getElementById("myDiv").innerHTML = time.getSeconds() + xmlhttp.responseText);
+					document.getElementById("myDiv").innerHTML = time.getSeconds() + xmlhttp.responseText;
 					console.log(time.getSeconds());
-					
 				}
-			}
-			setInterval(function(){	
-				xmlhttp.open("GET","Save_Local_test.txt",true);
-				xmlhttp.send();			
-			},3000);	
-		
+			};
+			setInterval(function(){
+		    	url = "/db/?" + "password=2";
+		    	console.log(url);
+				xmlhttp.open("GET",url,true);
+				xmlhttp.send();
+			},3000);
 	};
 	</script>
     </div>
     <!-- Scripts -->
-    
+
 	
 </body>
 
