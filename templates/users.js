@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>test</title>
-</head>
-<body>
-    <div id="myDiv">
-        <input id = "input"></input>
-    </div>
-    <script src="/static/js/jquery.min.js"></script>
-    <button onclick="ajaxSend('/db/search/')">send</button>
-
-
-    <script>
         function ajaxSend(urlWanted) {
             var xmlhttp;
             if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -33,7 +18,6 @@
             console.log(urlWanted);
             xmlhttp.open("GET", urlWanted, true);
             xmlhttp.send();
-        }
-    </script>
-</body>
-</html>
+        }/**
+ * Created by buptjsjlzn on 2016/12/24.
+ */

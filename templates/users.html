@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css"
+ rel="stylesheet">
+
+</head>
+<body>
+<div class="wrapper">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h1>物联网设备</h1>
+            <hr>
+            <a href="/logout/" type="button" class="btn pull-right">注销</a>
+            <a href="/login/" type="button" class="btn pull-right">登陆</a>
+            <a href="/add/" type="button" class="btn btn-success pull-right">添加</a>
+            <a href="/search/" type="button" class="btn btn-success pull-right">搜索</a>
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="text-left" style="width:25%">SN</th>
+                    <th class="text-left" style="width:25%">名称</th>
+                    <th class="text-left" style="width:25%">温度</th>
+                    <th class="text-left" style="width:25%">上次更新</th>
+                    <th class="text-left" style="width:25%">报警</th>
+                    <th class="text-left" style="width:25%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>{{ todo.SN }}</th>
+                        <th>{{ todo.name }}</th>
+                        <th>{{ todo.temperature }}</th>
+                        <th>{{ todo.last_update }}</th>
+                        <th>{{ todo.alarm }}</th>
+                        <th class="text-center">
+                            <a type="button" class="btn  btn-xs btn-success" href="/update/?todoid={{ todo.id }}">编辑</a>
+                            <a type="button" class="btn  btn-xs btn-danger" href="/del/?todoid={{ todo.id }}">删除</a>
+                            <a type="button" class="btn  btn-xs btn-danger" href="/derive/?todoid={{ todo.id }}">导出</a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+    </div>
+</div>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="users.js"></script>
+       <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <button onclick="ajaxSend('/db/search/')">send</button>
+
+</body>
+</html>
