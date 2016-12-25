@@ -31,10 +31,9 @@ urlpatterns = [
     url(r'^$', view.hello),
     url(r'^auth/',view.authentic),
     url(r'^user/',view.user),
-    url(r'^devices/',view.devices),
+    url(r'^device/',view.devices),
     url(r'device/id',view.device),
-    url(r'^db/search',db.db_SearchUser),
-    url(r'^db/', db.db_addUser),
+    url(r'^db/user',db.dataClear),
 
 ]
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

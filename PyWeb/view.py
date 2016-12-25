@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 
 def hello(request):
-    return render(request, 'test.html')
+    return render(request, 'users.html')
     # return HttpResponse("Hello world ! ")
 
 def authentic(request):
