@@ -18,19 +18,22 @@ import urllib.parse
 # 数据库操作
 
 """
-	if request.method == 'GET':
-		data =  request.GET
-	elif request.method == 'POST':
-		data = request.POST
-	else:
-		print (request.method)
-		return HttpResponse("{'result':WRONG METHOD:" + request.method + "'")
-	print (data)
-"""
-def dataClear(request):
 	url0 = request.get_full_path().split("?")[1]
 	url1 = urllib.parse.unquote(url0)  # 将url中的转义部分如引号转移为%22 重新转义为字符串
 	data = json.loads(url1)  # 将字符串转义为JSON格式
+
+"""
+def dataClear(request):
+	if request.method == 'GET':
+		data_raw =  request.GET
+	elif request.method == 'POST':
+		data_raw = request.POST
+	else:
+		print (request.method)
+		return HttpResponse("{'result':WRONG METHOD:" + request.method + "'")
+	print (request.META)
+	data = json.loads( next( data_raw.lists() )[0] )
+	print (data)
 
 	if data["operation"] == "userSignUp":
 		return HttpResponse(userSignUp(data))
@@ -87,7 +90,7 @@ def userSignUp(data):
 		return False
 def deviceSignUp(data):
 	try:
-		result = UserForm.objects.get_or_create(userName=data["userName"],userPassword=data["userPassword"])
+		result = UserForm.objects.get_or_create(DeviceName=data["DeviceName"],SN=data["SN"])
 		if result[1] == False: #does not exist and created one
 			user = result[0] # the creating one
 			return HttpResponse("Successfully registered")

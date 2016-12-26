@@ -22,34 +22,6 @@ function xmlHttpSend(urlWanted) {
     xmlhttp.open("GET", urlWanted, true);
     xmlhttp.send();
 }
-function keepUpdate(urlWanted){
-    console.log("enter keepUpdate");
-    urlWanted = "/db/token/"
-    $.ajax({
-        url:urlWanted,
-        xhrFields:{
-            withCredentials: true
-        },
-        Method:"GET",
-        success:function (response){
-            console.log("isJSON:" + isJson(response));
-            console.log(response);
-        },
-        error:function (msg,status){
-            console.log("message:"+msg);
-            console.log("status:"+status);
-        },
-        statusCode:{
-            404:function (msg){
-                console.log("page not found " + msg);
-            }
-        }
-    }).done(function (data){
-        console.log("done keepUpdate");
-        console.log(data);
-        keepUpdate(urlWanted);
-    });
-}
 function ajaxGET(urlWanted,header,dataJSON){
     console.log("enter ajaxGET");
     console.log("dataJson:" + JSON.stringify(dataJSON));
@@ -88,6 +60,7 @@ function ajaxGET(urlWanted,header,dataJSON){
 }
 function ajaxPOST(urlWanted,header,dataJSON){
     console.log("enter ajaxPOST");
+    console.log(header);
     if ( !isJson(dataJSON) ){
         console.log("not a json");
         return false;
@@ -122,6 +95,14 @@ function isJson(obj){
     var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
     return isjson;  //boolaen
 }
+function Devadd2List(data){
+    var tr = "<tr><td>" +  data.SN + "</td><td>" + data.Name + "</td><td>" + data.lastUpdate;
+    tr += "</td><td>" + data.delete + "</td><td><input type='checkbox'/></td></tr>";
+
+    if (data.length != 0){
+        $(data).appendTo("devTableTbody");
+    }
+}
 function Login() {
     var userLoginInfo = document.getElementById("").value + ":" + document.getElementById("").value;
     var header = 'Authorization' +  ":" + 'Basic ' +  btoa(userLoginInfo);
@@ -131,6 +112,34 @@ function Login() {
 function Logout(){
     ajaxGet("/");
 }
+function keepUpdate(urlWanted){
+    console.log("enter keepUpdate");
+    urlWanted = "/db/token/"
+    $.ajax({
+        url:urlWanted,
+        xhrFields:{
+            withCredentials: true
+        },
+        Method:"GET",
+        success:function (response){
+            console.log("isJSON:" + isJson(response));
+            console.log(response);
+        },
+        error:function (msg,status){
+            console.log("message:"+msg);
+            console.log("status:"+status);
+        },
+        statusCode:{
+            404:function (msg){
+                console.log("page not found " + msg);
+            }
+        }
+    }).done(function (data){
+        console.log("done keepUpdate");
+        console.log(data);
+        keepUpdate(urlWanted);
+    });
+}
 function addUser(){
     var dataJSON = {
         operation:'userSignUp',
@@ -139,19 +148,18 @@ function addUser(){
     };
     console.log(JSON.stringify(dataJSON));
     var urlWanted = "/db/user/";
-    ajaxGET(urlWanted,"{}",dataJSON);
+    ajaxPOST(urlWanted,"{'fuck':asd}",dataJSON);
 }
 function addDev(){
-    window.prompt('fuck');
+    var dataJSON = {
+        operation:'deviceSignUp',
+        deviceName:'Alex',
+        SN:'password'
+    };
+    console.log(JSON.stringify(dataJSON));
+    var urlWanted = "/db/user/";
+    ajaxPOST(urlWanted,"{'fuck':asd}",dataJSON);
 }
 function delDev(){
 
-}
-function Devadd2List(data){
-    var tr = "<tr><td>" +  data.SN + "</td><td>" + data.Name + "</td><td>" + data.lastUpdate;
-    tr += "</td><td>" + data.delete + "</td><td><input type='checkbox'/></td></tr>";
-
-    if (data.length != 0){
-        $(data).appendTo("devTableTbody");
-    }
 }
