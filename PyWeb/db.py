@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.http import HttpResponse
+from django.shortcuts import render
 
 from PyWebApp.models import UserForm
 from PyWebApp.models import DeviceForm
@@ -72,6 +73,18 @@ def devUpdate(data):
 	device.SN = data["SN"]
 
 	return HttpResponse("{'result':'done'}")
+def userLogin(request):
+	#try:
+		print (request.POST.getlist("userName"))
+
+		data_raw  = request.POST
+		data = json.loads(next(data_raw.lists())[0])
+		print(data)
+		result = UserForm.objects.get(userName=request.GET["userName"], userPassword=request.GET["userPassword"],)
+		url = "users.html?userId=" + result.id
+		return render(request,url)
+	#except:
+		return HttpResponse("{'result':false}")
 def userSignUp(data):
 	#try:
 		print (data["userName"]+data["userPassword"])
@@ -100,22 +113,18 @@ def deviceSignUp(data):
 		print ("except in userSignUp")
 		HttpResponse("SOMTHING WROING")
 		return False
-
 def db_SearchUser(request):
 	try:
 		user = UserForm.objects.get( userName = "Alex",  userPassword = request.get_full_path().split('?')[1])
 	except:
 		return HttpResponse("fuck")
 	return HttpResponse(user)
-
-
 def get_or_create(request):
 	try:
 		instance, created = cls.get(**kwargs), False
 	except cls.DoesNotExist:
 		instance, created = cls.create(**kwargs), True
 	return instance, created
-
 def User_get_or_create(request):
 	data = request.get_full_path().split("?")[1]
 	url = urllib.parse.unquote(data)

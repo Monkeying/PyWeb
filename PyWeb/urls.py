@@ -28,12 +28,12 @@ urlpatterns = [
 #    url(r'^static/(?P<path>.*)$', include('document_root': settings.STATIC_ROOT}, name='static'),
 
     url(r'^admin/',include(admin.site.urls)),
-    url(r'^$', view.hello),
-    url(r'^auth/',view.authentic),
-    url(r'^user/',view.user),
+    url(r'^$', view.Login),
+
+    url(r'^user/Login',db.userLogin),
+    url(r'^user/',db.dataClear),
     url(r'^device/',view.devices),
-    url(r'device/id',view.device),
-    url(r'^db/user',db.dataClear),
+    url(r'^db/', db.dataClear),
 
 ]
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

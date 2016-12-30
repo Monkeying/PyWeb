@@ -3,8 +3,8 @@ from django.shortcuts import render
 # -*- coding: utf-8 -*-
 # Create your views here.
 
-def hello(request):
-    return render(request, 'users.html')
+def Login(request):
+    return render(request, 'Login.html')
     # return HttpResponse("Hello world ! ")
 
 def authentic(request):
