@@ -1,14 +1,22 @@
 # -*- coding: utf-8 -*-
-
+import os
 from django.http import HttpResponse
+from django.http import HttpRequest
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from PyWebApp.models import UserForm
 from PyWebApp.models import DeviceForm
 
+from PyWeb import SocketServer
+
+
+
 import json
 
 import urllib.parse
+
+import sched,time
 
 """
 	data = request.get_full_path().split("?")[1]
@@ -24,6 +32,7 @@ import urllib.parse
 	data = json.loads(url1)  # 将字符串转义为JSON格式
 
 """
+changedDevId = []
 def dataClear(request):
 	if request.method == 'GET':
 		data_raw =  request.GET
@@ -68,11 +77,7 @@ def userUpdate(data):
 		response.append(device)
 	return HttpResponse(json.loads(response))
 
-def devUpdate(data):
-	device = DeviceForm.objects.get(id=data["devId"])
-	device.SN = data["SN"]
 
-	return HttpResponse("{'result':'done'}")
 def userLogin(request):
 	#try:
 		print (request.POST.getlist("userName"))
@@ -99,7 +104,7 @@ def userSignUp(data):
 			return HttpResponse("Successfully registered")
 	#except:
 		print ("except in userSignUp")
-		HttpResponse("SOMTHING WROING")
+		HttpResponse("SOMTHING WRONG")
 		return False
 def deviceSignUp(data):
 	try:
@@ -113,12 +118,7 @@ def deviceSignUp(data):
 		print ("except in userSignUp")
 		HttpResponse("SOMTHING WROING")
 		return False
-def db_SearchUser(request):
-	try:
-		user = UserForm.objects.get( userName = "Alex",  userPassword = request.get_full_path().split('?')[1])
-	except:
-		return HttpResponse("fuck")
-	return HttpResponse(user)
+
 def get_or_create(request):
 	try:
 		instance, created = cls.get(**kwargs), False
@@ -152,3 +152,107 @@ def User_get_or_create(request):
 		newUser.save()
 		return HttpResponse("fucking worked")
 	return HttpResponse(userStr)
+
+def db_SearchUser(email,name,password):
+	try:
+		user = UserForm.objects.all().get(userName=name,userPassword=password,userEmail=email)
+		return user.id
+	except:
+		return -1
+
+def table(request):
+	print("table")
+	user = UserForm.objects.get(id = request.GET["userId"])
+	print(user.id)
+	for dev in user.deviceform_set.all():
+		print(dev.id)
+		changedDevId.append(dev.id)
+	return render(request,"tables.html")
+def serverKeepUpdate(request):
+	#	event = sched.scheduler(time.time, time.sleep)
+#	file = open("templates/tables/data1.json","r")
+#	obj = file.read()
+#	data = json.loads(obj)
+#	data = []
+#	obj = json.dumps(data)
+	while True:
+		if (changedDevId):
+			response = []
+			print (request.GET)
+			user = UserForm.objects.get(id= request.GET["userId"])
+			for device in user.deviceform_set.all():
+				print(device.id)
+				deviceInfo = {}
+				for name in DeviceForm._meta.fields:
+					name = str(name)
+					name = name.split(".")[2]
+					deviceInfo[name] = getattr(device, name)
+				if device.id in changedDevId:
+					response.insert(0,deviceInfo)
+				else:
+					response.append(deviceInfo)
+
+			changedDevId.clear()
+
+			responseJSON = json.dumps(response)
+			return HttpResponse(responseJSON)
+
+"""
+def serverKeepUpdate(request):
+#	event = sched.scheduler(time.time, time.sleep)
+	while True:
+		if ( changedDevId ):
+			response = {}
+			for devId in changedDevId: #data format {'Id':{'SN':asdf,'Name':asd},'Id':{'SN':sad}}
+				device = DeviceForm.objects.get(id=devId)
+				deviceInfo = {}
+				for user in device.users.all():
+					if str(user.id) == request.GET["userId"]:
+						for name in  DeviceForm._meta.fields:
+							name = str(name)
+							name = name.split(".")[2]
+							deviceInfo[name] = getattr(device,name)
+				response[devId] = deviceInfo
+				changedDevId.remove(devId)
+
+			changedDevId.clear()
+
+			responseJSON = json.dumps(response)
+			return HttpResponse(responseJSON)
+
+#		else:
+#			event.enter(10,2,serverKeepUpdate)
+"""
+def validate(request):
+	userId = db_SearchUser(request.POST["email"],request.POST["name"],request.POST["password"])
+	if (userId != -1):
+		url = "index.html/?userId=" + str(userId)
+		return HttpResponseRedirect(url)
+	else:
+		return HttpResponseRedirect("/?0")
+
+def devUpdate(request):
+	print (request.POST)
+	device = DeviceForm.objects.get(id=request.POST["deviceId"])
+	nameList = dir(device)
+	for name in nameList:
+		print(name+request.POST[name])
+		setattr(device,name,request.POST[name])
+
+	return HttpResponse("{'result':'done'}")
+
+
+
+def userSocket(request):
+	print (request)
+	return HttpResponse("back")
+
+def serverSocket(request):
+	#try:
+		server= SocketServer.WebSocketServer()
+		print("begin")
+		server.begin()
+		print ("here")
+	#except:
+		print ("wrong")
+		return HttpResponse("hi")

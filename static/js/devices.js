@@ -1,6 +1,7 @@
 /**
  * Created by buptjsjlzn on 2016/12/24.
  */
+var deviceId = -1;
 function DataGenerateInterval(){
 // to autoly generate data
     setInterval(function(){
@@ -11,32 +12,26 @@ function DataGenerateInterval(){
 }
 function sendInfoInterval()
 {
-    var xmlhttp;
-    if (window.XMLHttpRequest)
-    {// code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    }
-    else
-    {// code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function()
-    {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-        {
-            console.log(xmlhttp.responseText);
-        }
-    };
     setInterval(function(){
-        url = "/db/device/?";
-        url += document.getElementById("SN").name + "=" + document.getElementById("SN").value;
-        url += document.getElementById("tempreture").name + "=" + document.getElementById("tempreture").value;
+        url = "/device/update/";
+        var data = {
+            deviceId:deviceId
+        };
 
-        console.log(url);
-        xmlhttp.open("GET",url,true);
-        xmlhttp.send();
+        $.ajax({
+            url:url,
+            type:'POST',
+            data:data,
+            success:function (response){
+                console.log("Device Update success:" + deviceId );
+                console.log(response);
+            },
+            error:function (err){
+                alert(err.statusCode())
+            }
+        });
     },3000);
-};
+}
 function shutDown(){
 //if alarm off or somethingl ike that happends, trigger closeup
 }

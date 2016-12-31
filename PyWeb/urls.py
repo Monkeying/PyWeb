@@ -29,11 +29,15 @@ urlpatterns = [
 
     url(r'^admin/',include(admin.site.urls)),
     url(r'^$', view.Login),
+    url(r'^user/keepUpdate',db.serverKeepUpdate),
+    url(r'^user/validate',db.validate),
+    url(r'^device/update',db.devUpdate),
+
+    url(r'^user/index.html',view.index),
+    url(r'^user/tables.html',db.table),
+    url(r'^user/tables/data1.json',db.serverKeepUpdate),
 
     url(r'^user/Login',db.userLogin),
-    url(r'^user/',db.dataClear),
-    url(r'^device/',view.devices),
-    url(r'^db/', db.dataClear),
 
 ]
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
